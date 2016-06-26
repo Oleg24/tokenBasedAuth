@@ -43,7 +43,7 @@ app.get('/setup', function (req, res) {
 /* API Routes */
 var apiRoutes = express.Router()
 
-apiRoutes.use(function (req, res, next) {
+var authenticateToken = function (req, res, next) {
   var token = req.body.token || req.query.token || req.headers['x-access-token']
 
   if (token) {
@@ -62,7 +62,7 @@ apiRoutes.use(function (req, res, next) {
       message: 'where your token at?!'
     })
   }
-})
+}
 
 /* (GET http://localhost:8080/api/) */
 apiRoutes.get('/', function (req, res) {
@@ -85,7 +85,7 @@ apiRoutes.post('/authenticate', function (req, res) {
       } else {
         /* if user is found & correct password, create a token */
         var token = jwt.sign(user, app.get('superSecret'), {
-          exiresIn: 14400000
+          expiresIn: 14400000
         })
         res.json({
           success: true,
@@ -99,7 +99,7 @@ apiRoutes.post('/authenticate', function (req, res) {
 /* route to return all users
   (GET http://localhost:8080/api/)
 */
-apiRoutes.get('/users', function (req, res) {
+apiRoutes.get('/users', authenticateToken, function (req, res) {
   User.find({}, function (err, users) {
     res.json(users)
   })
