@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 
-/* basic routes */
+/* basic routes - consider moving to separate file */
 app.get('/', function (req, res) {
   res.send('Hello! the API is at http://localhost:' + port + ' api')
 })
